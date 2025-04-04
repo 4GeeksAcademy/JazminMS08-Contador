@@ -1,43 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
 const SecondsCounter = ({ seconds }) => {
-    const formattedSeconds = seconds.toString().padStart(6, "0");
+    const formattedSeconds = seconds.toString().padStart(6, "0").split("");
 
     return (
         <div className="container d-flex justify-content-center bg-black py-4">
             <div className="d-flex flex-row justify-content-center align-items-center gap-3">
-                
                 <div className="border border-1 rounded p-3 bg-dark text-white d-flex align-items-center justify-content-center">
                     <i className="fa-solid fa-clock fs-1"></i>
                 </div>
-
-                {formattedSeconds.split("").map((digit, index) => (
-                    <div
-                        key={index}
-                        className="border border-1 rounded p-3 bg-dark text-white d-flex align-items-center justify-content-center"
-                        style={{ minWidth: "50px", minHeight: "80px" }}
-                    >
-                        <h5 className="fs-1">{digit}</h5>
-                    </div>
+                {formattedSeconds.map((digit, index) => (
+                    <Digit key={index} value={digit} />
                 ))}
             </div>
         </div>
     );
 };
 
-const App = () => {
-    const [seconds, setSeconds] = useState(0);
+const Digit = ({ value }) => (
+    <div
+        className="border border-1 rounded p-3 bg-dark text-white d-flex align-items-center justify-content-center"
+        style={{ minWidth: "50px", minHeight: "80px" }}
+    >
+        <h5 className="fs-1">{value}</h5>
+    </div>
+);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds((prev) => prev + 1);
-        }, 1000);
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-        return () => clearInterval(interval);
-    }, []);
-
-    return <SecondsCounter seconds={seconds} />;
+let seconds = 0;
+const updateCounter = () => {
+    root.render(<SecondsCounter seconds={seconds} />);
+    seconds++;
 };
 
-export default App;
+setInterval(updateCounter, 1000);
+
+export default SecondsCounter;
+
+
+
+
 
